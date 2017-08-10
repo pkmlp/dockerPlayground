@@ -21,8 +21,8 @@ Einen MySQL Container mit dem offiziellen Image vom Docker Repository starten wi
 
     > docker run -d --name mySecondDbApp  \
                  -e MYSQL_ROOT_PASSWORD=pkmlp \
-                 -v /home/pkmlp/dockerWork/MySqlApps/mySecondApp/mySqlData:/var/lib/mysql   \
-                 -v /home/pkmlp/dockerWork/MySqlApps/mySecondApp/mySqlShare:/usr/src/mysql   \
+                 -v /home/pkmlp/gitRepos/dockerPlayground/dockerWork/MySqlApps/mySecondApp/mySqlData:/var/lib/mysql   \
+                 -v /home/pkmlp/gitRepos/dockerPlayground/dockerWork/MySqlApps/mySecondApp/mySqlShare:/usr/src/mysql   \
                  mysql:5.7
 
 Hinweise:
@@ -62,8 +62,8 @@ Einen MySQL Container mit dem offiziellen Image vom Docker Repository starten wi
 
     > docker run -d --name mySecondDbApp  \
                  -e MYSQL_ROOT_PASSWORD=pkmlp \
-                 -v /home/pkmlp/dockerWork/MySqlApps/mySecondApp/mySqlData:/var/lib/mysql   \
-                 -v /home/pkmlp/dockerWork/MySqlApps/mySecondApp/mySqlShare:/usr/src/mysql   \
+                 -v /home/pkmlp/gitRepos/dockerPlayground/dockerWork/MySqlApps/mySecondApp/mySqlData:/var/lib/mysql   \
+                 -v /home/pkmlp/gitRepos/dockerPlayground/dockerWork/MySqlApps/mySecondApp/mySqlShare:/usr/src/mysql   \
                  -p 3306:3306 \
                  mysql:5.7
 

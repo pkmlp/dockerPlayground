@@ -1,11 +1,11 @@
 
-In diesem Beispiel erstellen wir einen Container, der Python mit dem Jupyter Notebook enthält. Wir verwenden dafür das Image jupyter/scipy-notebook ab Git-Hub (https://github.com/jupyter/docker-stacks) und starten den Container mit:
+In diesem Beispiel erstellen wir einen Container, der Python mit dem Jupyter Notebook enthält. Wir verwenden dafür das "vorhandene" Image jupyter/scipy-notebook und starten den Container mit:
 
     > docker run      \
              -d       \
              --rm     \
              -p 8888:8888   \
-             -v /home/pkmlp/dockerWork/PythonApps/jupyterNotebook/Notebooks:/home/jovyan/work    \
+             -v /home/pkmlp/gitRepos/dockerPlayground/dockerWork/PythonApps/jupyterNotebook/Notebooks:/home/jovyan/work    \
              --name pythonJupyter    \
              jupyter/scipy-notebook start-notebook.sh --NotebookApp.token=''  
 

@@ -23,7 +23,7 @@ Hinweise:
 
 Ist das Image erstellt, kann der Container gestartet werden mit:
 
-    > docker run -d -p 8080:5000 --name myThirdApp -v /home/pkmlp/dockerWork/PythonFlaskApps/myThirdApp:/usr/src/app/ mythirdapp
+    > docker run -d -p 8080:5000 --name myThirdApp -v /home/pkmlp/gitRepos/dockerPlayground/dockerWork/PythonFlaskApps/myThirdApp:/usr/src/app/ mythirdapp
 
 Hinweise:
 

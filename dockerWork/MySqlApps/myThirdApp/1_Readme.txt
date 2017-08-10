@@ -81,7 +81,7 @@ Dann starten wir den DB-GUI Container
     > xhost local:root
 	> docker run --detach \
                      --network=db_netz \
-                     --volume /home/pkmlp/dockerWork/MySqlApps/myThirdApp/DB_Gui/mySqlShare:/usr/src/mysql   \
+                     --volume /home/pkmlp/gitRepos/dockerPlayground/dockerWork/MySqlApps/myThirdApp/DB_Gui/mySqlShare:/usr/src/mysql   \
                      --volume /tmp/.X11-unix:/tmp/.X11-unix \
                      --env DISPLAY=unix$DISPLAY \
                      --name DB_Gui \
