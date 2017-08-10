@@ -28,7 +28,7 @@ Schritt 2: dann starten wir unsere Umgebung
 Schritt 3: dann stoppen wir unsere Umgebung
 ===========================================
 
-    > docker-compose up -d
+    > docker-compose stop 
 
 
 
