@@ -1,0 +1,25 @@
+version: "3"
+services:
+
+    CMDB_App:
+        build: 
+            context: ./CMDB_App/
+            dockerfile: Dockerfile
+        image: cmdb_app
+        environment:
+            - DISPLAY=unix:0
+        volumes: 
+            - /tmp/.X11-unix:/tmp/.X11-unix
+
+    CMDB_Help:
+        build:
+            context: ./CMDB_Help/
+            dockerfile: Dockerfile
+        image: cmdb_help
+        environment:
+            - DISPLAY=unix:0
+        volumes: 
+            - /tmp/.X11-unix:/tmp/.X11-unix
+        depends_on: 
+            - CMDB_App
+

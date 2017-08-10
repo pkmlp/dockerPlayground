@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="jumbotron">
+    <h1>Login</h1>
+    <p class="lead">Login is required for full access to the page content</p>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12"><br>
+        <form action="" class="form-inline" method="post">
+            <i class="glyphicon glyphicon-user">&nbsp;</i><input type="text" class="form-control" placeholder="Username" required autofocus name=username value="{{request.form.username}}"><br><br>
+            <i class="glyphicon glyphicon-lock">&nbsp;</i><input type="password" class="form-control" placeholder="Password" required name=password value="{{request.form.password}}"><br><br>
+            <button class="btn btn-primary" type="submit">Login</button>
+            &nbsp;&nbsp;{{error}}<br>
+        </form><br><br>
+    </div>
+</div>
+
+
+{% endblock %}

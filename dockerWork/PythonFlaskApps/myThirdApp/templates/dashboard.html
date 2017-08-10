@@ -1,0 +1,941 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="jumbotron">
+    <h1>{{title}}</h1>
+    <p class="lead">{{message}}</p>
+</div>
+
+
+<div class="panel with-nav-tabs panel-warning" style="margin-bottom:75px">
+    <div class="panel-heading">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#tab_project_structure" data-toggle="tab">Project Structure</a></li>
+                <li class="dropdown">
+                    <a href="#" data-toggle="dropdown">Python Files<span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#helloFlask" data-toggle="tab">HelloFlask.py</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" data-toggle="dropdown">HTML Files<span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#404" data-toggle="tab">404.html</a></li>
+                        <li><a href="#405" data-toggle="tab">405.html</a></li>
+                        <li><a href="#500" data-toggle="tab">500.html</a></li>
+                        <li><a href="#about" data-toggle="tab">about.html</a></li>
+                        <li><a href="#contact" data-toggle="tab">contact.html</a></li>
+                        <li><a href="#dashboard" data-toggle="tab">dashboard.html</a></li>
+                        <li><a href="#index" data-toggle="tab">index.html</a></li>
+                        <li><a href="#layout" data-toggle="tab">layout.html</a></li>
+                        <li><a href="#login" data-toggle="tab">login.html</a></li>
+                        <li><a href="#register" data-toggle="tab">register.html</a></li>
+                    </ul>
+                </li>
+            </ul>
+    </div>
+    <div class="panel-body">
+        <div class="tab-content">
+
+            <div class="tab-pane fade in active" id="tab_project_structure">
+                <div class="row">
+                    <div style="padding:0 20px">
+                        <p>The Structure of the Project is as any other Flask-Project Structure:<br></p>
+                         <img src="/static/images/Project_Structure_1.png" class="img-rounded" alt="Project Structure" width="450">
+                        <p><br>The HelloFlask folder is the root of your application and holds the Python-Script to run the website
+                            <br>The static folder holds all of your static assets (css, fonts, images, javascript).
+                            <br>The templates folder will hold your html-templates.<br><br></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="helloFlask">
+                <div class="row">
+                    <div style="padding:0 20px">
+                        <p>The Python-Flask-Source-Code of HelloFlask.py:<br></p>
+                        <pre class="line-numbers"><code class="language-python">
+
+
+"""
+This python-script runs the HelloFlask application
+"""
+
+from datetime import datetime
+from flask import Flask, render_template, flash, request, redirect, url_for, session
+
+from functools import wraps
+import sqlite3 as db
+
+from passlib.apps import custom_app_context as password_hash
+
+
+app = Flask(__name__)
+
+app.secret_key = 'flash_requires_a_secret_key'
+
+
+def login_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'logged_in' in session:
+            return f(*args, **kwargs)
+        else:
+            flash("Dashboard is available for logged in users only")
+            return redirect(url_for('login'))
+
+    return wrap
+
+
+"""
+routes and views for the flask application.
+"""
+
+
+@app.route('/')
+@app.route('/index')
+def index():
+    """Renders the home page."""
+
+    try:
+        return render_template(
+            'index.html',
+            title='Home',
+            year=datetime.now().year
+        )
+    except Exception as e:
+        return render_template(
+            "500.html",
+            message=str(e)
+        )
+
+
+@app.route('/contact')
+def contact():
+    """Renders the contact page."""
+    try:
+        return render_template(
+            'contact.html',
+            title='Contact',
+            year=datetime.now().year,
+            message='Feedbacks, Comments, Suggestions are very welcome'
+        )
+    except Exception as e:
+        return render_template(
+            "500.html",
+            message=str(e)
+        )
+
+
+@app.route('/about')
+def about():
+    """Renders the about page."""
+    try:
+        return render_template(
+            'about.html',
+            title='About',
+            year=datetime.now().year,
+            message='This Website - a live example of a Website with Python, Flask and Bootstrap'
+        )
+    except Exception as e:
+        return render_template(
+            "500.html",
+            message=str(e)
+        )
+
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    """Renders the dashboard page."""
+    try:
+        return render_template(
+            'dashboard.html',
+            year=datetime.now().year
+        )
+    except Exception as e:
+        return render_template(
+            "500.html",
+            message=str(e)
+        )
+
+
+@app.route('/login/', methods=["GET", "POST"])
+def login():
+    """Renders the login page."""
+    if 'logged_in' in session:
+            flash("You are already logged in as: " + session['username'])
+            return redirect(url_for('dashboard'))
+
+    error = ''
+    try:
+        if request.method == "POST":
+
+            attempted_username = request.form['username']
+            attempted_password = request.form['password']
+
+            userDataUsername = ""
+            userDataPassword = ""
+
+            connection = db.connect("HelloFlask.db")
+            cursor = connection.cursor()
+
+            sqlStatement = "SELECT * FROM user WHERE username = ?"
+            userData = cursor.execute(sqlStatement, [attempted_username])
+
+            for user in userData:
+                userDataUsername = user[2]
+                userDataPassword = user[3]
+
+            cursor.close()
+            connection.close()
+
+            if attempted_username == userDataUsername and password_hash.verify(attempted_password, userDataPassword):
+                session['logged_in'] = True
+                session['username'] = userDataUsername
+                return redirect(url_for('dashboard'))
+
+            else:
+                error = "Invalid Username or Password  -  Please try again."
+
+        return render_template("login.html", error=error)
+
+    except Exception as e:
+        return render_template("login.html", error=str(e))
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    """clears the session and redirects to the index page."""
+    try:
+        session.clear()
+        return redirect(url_for('index'))
+    except Exception as e:
+        return render_template(
+            "500.html",
+            message=str(e)
+        )
+
+
+@app.route('/register/', methods=["GET", "POST"])
+def register():
+    """Renders the register page."""
+
+    error = ''
+    try:
+
+        if request.method == "POST":
+
+            if 'logged_in' in session:
+                session.clear()
+
+            attempted_email = request.form['email']
+            attempted_username = request.form['username']
+            attempted_password = request.form['password']
+            attempted_confirm = request.form['confirm']
+
+            connection = db.connect("HelloFlask.db")
+            cursor = connection.cursor()
+
+            userDataUsername = ""
+            sqlStatement = "SELECT * FROM user WHERE username = ?"
+            userData = cursor.execute(sqlStatement, [attempted_username])
+
+            for user in userData:
+                userDataUsername = user[2]
+
+            cursor.close()
+            connection.close()
+
+            if attempted_username == userDataUsername:
+                error = 'Username already exists  -  Please try another one.'
+                return render_template("register.html", error=error)
+
+            if attempted_password != attempted_confirm:
+                error = 'Password does not match Confirmation  -  Please check.'
+                return render_template("register.html", error=error)
+
+            hashed_Password = password_hash.encrypt(attempted_password)
+
+            connection = db.connect("HelloFlask.db")
+            cursor = connection.cursor()
+
+            sqlStatement = "INSERT INTO user (email, username, password) VALUES (?, ?, ?)"
+            cursor.execute(sqlStatement, (attempted_email, attempted_username, hashed_Password))
+
+            cursor.close()
+            connection.commit()
+            connection.close()
+
+            session['logged_in'] = True
+            session['username'] = attempted_username
+            return redirect(url_for('dashboard'))
+
+        if 'logged_in' in session:
+            flash("Please Note: If you are already logged in, you will be logged out and logged in again with the new created user account")
+
+        return render_template("register.html", error=error)
+
+    except Exception as e:
+        return render_template('register.html', error=str(e))
+
+
+@app.route('/delete')
+@login_required
+def delete():
+    """deletes actual account."""
+    try:
+        connection = db.connect("HelloFlask.db")
+        cursor = connection.cursor()
+
+        sqlStatement = "DELETE FROM user WHERE username = '%s'" %session['username']
+        cursor.execute(sqlStatement)
+
+        cursor.close()
+        connection.commit()
+        connection.close()
+
+        session.clear()
+        return redirect(url_for('index'))
+
+    except Exception as e:
+        return render_template(
+            "500.html",
+            message=str(e)
+        )
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    """Renders the not found page."""
+    try:
+        return render_template("404.html")
+
+    except Exception as e:
+        return render_template("500.html", message=str(e))
+
+
+@app.errorhandler(405)
+def method_not_allowed(e):
+    """Renders the not found page."""
+    try:
+        return render_template("405.html")
+
+    except Exception as e:
+        return render_template("500.html", message=str(e))
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+                    </code></pre></div>
+                </div>
+            </div>
+
+
+
+            <div class="tab-pane fade" id="405">
+                <div class="row">
+                    <div style="padding:0 20px">
+                        <p>The HTML-Source-Code of 405.html:<br></p>
+                        <pre class="line-numbers"><code class="language-markup">
+
+&#123;% extends "layout.html" %&#125;
+
+&#123;% block content %&#125;
+
+&lt;div class="row"&gt;
+    &lt;div class="col-md-12 text-center"&gt;
+        &lt;div class="alert alert-danger" role="alert" style="margin-top:75px; margin-bottom:75px"&gt;
+            &lt;h3&gt;&lt;span class="glyphicon glyphicon-random" aria-hidden="true"&gt;&lt;/span&gt;
+            &nbsp;&nbsp;Woops, this method is not allowed! (405)&lt;/h3&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="row"&gt;
+    &lt;div class="col-md-12 text-center"&gt;
+        &lt;a class="btn btn-primary btn-lg" href="&#123;&#123; url_for('index') &#125;&#125;" role="button"&gt;
+            &lt;span class="glyphicon glyphicon-home" aria-hidden="true"&gt;&lt;/span&gt;
+            &nbsp;&nbsp;Bring me back home&lt;/a&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+
+&#123;% endblock %&#125;
+
+
+                       </code></pre>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="tab-pane fade" id="404">
+                <div class="row">
+                    <div style="padding:0 20px">
+                        <p>The HTML-Source-Code of 404.html:<br></p>
+                        <pre class="line-numbers"><code class="language-markup">
+
+&#123;&#37; extends "layout.html" &#37;&#125;
+
+&#123;&#37; block content &#37;&#125;
+
+&lt;div class="row"&gt;
+    &lt;div class="col-md-12 text-center"&gt;
+        &lt;div class="alert alert-danger" role="alert" style="margin-top:75px; margin-bottom:75px"&gt;
+            &lt;h3&gt;&lt;span class="glyphicon glyphicon-random" aria-hidden="true"&gt;&lt;/span&gt;
+            &nbsp;&nbsp;Woops, something went terribly wrong - I couldn&rsquo;t find the page you&rsquo;re looking for! (404)&lt;/h3&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="row"&gt;
+    &lt;div class="col-md-12 text-center"&gt;
+        &lt;a class="btn btn-primary btn-lg" href="&#123;&#123; url_for('index') &#125;&#125;" role="button"&gt;
+            &lt;span class="glyphicon glyphicon-home" aria-hidden="true"&gt;&lt;/span&gt;
+            &nbsp;&nbsp;Bring me back home&lt;/a&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&#123;&#37; endblock &#37;&#125;
+
+                       </code></pre>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="tab-pane fade" id="500">
+                <div class="row">
+                    <div style="padding:0 20px">
+                        <p>The HTML-Source-Code of 500.html:<br></p>
+                        <pre class="line-numbers"><code class="language-markup">
+
+&#123;% extends "layout.html" %&#125;
+
+&#123;% block content %&#125;
+
+&lt;div class="row"&gt;
+    &lt;div class="col-md-12 text-center"&gt;
+        &lt;div class="alert alert-danger" role="alert" style="margin-top:75px; margin-bottom:75px"&gt;
+            &lt;h3&gt;&lt;span class="glyphicon glyphicon-flash" aria-hidden="true"&gt;&lt;/span&gt;
+                &nbsp;&nbsp;Woops, something went terribly wrong - the server doesn&rsquo;t work as expected (500)
+                &nbsp;&nbsp;&lt;span class="glyphicon glyphicon-flash" aria-hidden="true"&gt;&lt;/span&gt;&lt;br&gt;&lt;br&gt;
+                &#123;&#123; message &#125;&#125;
+            &lt;/h3&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="row"&gt;
+    &lt;div class="col-md-12 text-center"&gt;
+        &lt;a class="btn btn-primary btn-lg" href="&#123;&#123; url_for('index') &#125;&#125;" role="button"&gt;
+            &lt;span class="glyphicon glyphicon-home" aria-hidden="true"&gt;&lt;/span&gt;
+            &nbsp;&nbsp;Bring me back home&lt;/a&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+
+&#123;% endblock %&#125;
+
+                        </code></pre>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="tab-pane fade" id="about">
+                <div class="row">
+                    <div style="padding:0 20px">
+                        <p>The HTML-Source-Code of about.html:<br></p>
+                        <pre class="line-numbers"><code class="language-markup">
+
+&#123;&#37; extends "layout.html" &#37;&#125;
+
+&#123;&#37; block content &#37;&#125;
+
+
+&lt;div class="jumbotron"&gt;
+    &lt;h1&gt;&#123;&#123;title&#125;&#125;&lt;/h1&gt;
+    &lt;p class="lead"&gt;&#123;&#123;message&#125;&#125;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class="row"&gt;
+    &lt;div class="col-md-4"&gt;
+        &lt;h2&gt;Python ...&lt;/h2&gt;
+        &lt;p&gt;... is powerful and fast; plays well with others; runs everywhere; is friendly and easy to learn; and
+            it is Open. Python can be easy to pick up whether you're a first time programmer or you're experienced with
+            other languages. &lt;/p&gt;
+        &lt;p&gt;&lt;a class="btn btn-default" href="https://www.python.org/" target="_blank" style="margin-top:15px"&gt;Learn more &raquo;&lt;/a&gt;&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class="col-md-4"&gt;
+        &lt;h2&gt;Flask ...&lt;/h2&gt;
+        &lt;p&gt;... is a micro web development framework for Python. Flask is based on Werkzeug, Jinja 2 and good intentions.
+            Even though Flask is a rather new project, there has already been a healthy community evolved around it. &lt;/p&gt;
+        &lt;p&gt;&lt;a class="btn btn-default" href="http://flask.pocoo.org/docs/" target="_blank" style="margin-top:15px"&gt;Learn more &raquo;&lt;/a&gt;&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class="col-md-4"&gt;
+        &lt;h2&gt;Bootstrap ...&lt;/h2&gt;
+        &lt;p&gt;... is the most popular HTML, CSS, and JS framework for developing responsive, mobile first web sites.
+            It is a sleek, intuitive, and powerful front-end framework for faster and easier web development.&lt;/p&gt;
+        &lt;p&gt;&lt;a class="btn btn-default" href="http://getbootstrap.com/" target="_blank" style="margin-top:15px"&gt;Learn more &raquo;&lt;/a&gt;&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+
+&lt;div class="row"&gt;
+    &lt;div class="col-md-12"&gt;
+        &lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+            &lt;button type="button" class="btn btn-primary" data-toggle="modal" data-target="#example-modal-lg"&gt;What's in, what's not in&lt;/button&gt;
+        &lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+
+&lt;!-- Modal HTML --&gt;
+&lt;div class="modal fade" id="example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="example-modal-lg" aria-hidden="true"&gt;
+  &lt;div class="modal-dialog modal-lg"&gt;
+        &lt;div class="modal-content"&gt;
+            &lt;div class="modal-header modal-header-primary"&gt;
+                &lt;button type="button" class="close" data-dismiss="modal" aria-label="Close"&gt;&lt;span aria-hidden="true"&gt;&times;&lt;/span&gt;&lt;/button&gt;
+                &lt;h2&gt;&lt;i class="glyphicon glyphicon-thumbs-up"&gt;&lt;/i&gt;&nbsp;&nbsp;Topics in this Example&lt;/h2&gt;
+            &lt;/div&gt;
+            &lt;div class="modal-body"&gt;
+                &lt;p&gt;The goal of this small example is to highlight the strength of each of the Triumvirate:
+                    Python, Flask and Bootstrap.&lt;br&gt;&lt;br&gt;The main topics in this example are:&lt;/p&gt;&lt;ul&gt;
+                    &lt;li&gt;Logic-Programming with Python,&lt;/li&gt;
+                    &lt;li&gt;Web-Programming with Flask and &lt;/li&gt;
+                    &lt;li&gt;GUI-Programming with Bootstrap.&lt;/li&gt;
+                    &lt;/ul&gt;&lt;p&gt;&lt;br&gt;But that's not all. This example also includes the more advanced topics:&lt;/p&gt;&lt;ul&gt;
+                    &lt;li&gt;User-Authentication and&lt;/li&gt;
+                    &lt;li&gt;Database Programming. &lt;/li&gt;
+                    &lt;/ul&gt;&lt;br&gt;
+                &lt;p class="text-warning"&gt;And yes: the only reason for this is to have an example
+                    of a Bootstrap Modal.&lt;/p&gt;
+            &lt;/div&gt;
+            &lt;div class="modal-footer"&gt;
+                &lt;button type="button" class="btn btn-primary" data-dismiss="modal"&gt;Close&lt;/button&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+
+&lt;div class="row"&gt;
+    &lt;div class="col-md-12"&gt;
+        &lt;div class="alert alert-info" role="alert" style="margin-top:35px;"&gt;
+            &lt;span class="glyphicon glyphicon-question-sign" aria-hidden="true"&gt;&lt;/span&gt;
+            &nbsp;&nbsp;&nbsp;Can&rsquo;t find what you&rsquo;re looking for? Please check:
+            &lt;a href="http://www.pkmlp.ch" target="_blank"&gt;&lt;strong&gt; Peter Kessler&rsquo;s Moodle Lernportal &lt;/strong&gt;&lt;/a&gt; in the Internet!
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+
+&lt;div class="row"&gt;
+    &lt;div class="col-md-12"&gt;
+        &lt;div class="alert alert-info" role="alert" style="margin-top:5px; margin-bottom:75px"&gt;
+            &lt;span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"&gt;&lt;/span&gt;
+            &nbsp;&nbsp;&nbsp;Still not found what you&rsquo;re looking for? Please check:
+            &lt;a href="http://www.google.ch/webhp?hl=en#hl=en-CH&q=python+flask+bootstrap" target="_blank"&gt;&lt;strong&gt; Developer&rsquo;s number 1 Tool &lt;/strong&gt;&lt;/a&gt; in the Internet!
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+
+&#123;&#37; endblock &#37;&#125;
+
+
+                        </code></pre>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="tab-pane fade" id="contact">
+                <div class="row">
+                    <div style="padding:0 20px">
+                        <p>The HTML-Source-Code of contact.html:<br></p>
+                        <pre class="line-numbers"><code class="language-markup">
+
+&#123;&#37; extends "layout.html" &#37;&#125;
+
+&#123;&#37; block content &#37;&#125;
+
+&lt;script src="http://maps.googleapis.com/maps/api/js"&gt;&lt;/script&gt;
+
+&lt;script&gt;
+
+var myCenter=new google.maps.LatLng(47.425065791614415,8.521609380841255);
+var marker;
+
+function initialize()
+&#123;
+var mapProp = &#123;
+  center:myCenter,
+  zoom:19,
+  mapTypeId:google.maps.MapTypeId.SATELLITE
+  &#125;;
+
+var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+
+var marker=new google.maps.Marker(&#123;
+  position:myCenter,
+  animation:google.maps.Animation.BOUNCE
+  &#125;);
+
+marker.setMap(map);
+&#125;
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+
+
+var myCenter2=new google.maps.LatLng(47.425065791614415,8.521609380841255);
+var marker2;
+
+function initialize2()
+&#123;
+var mapProp2 = &#123;
+  center:myCenter2,
+  zoom:9,
+  mapTypeId:google.maps.MapTypeId.ROADMAP
+  &#125;;
+
+var map2=new google.maps.Map(document.getElementById("googleMap2"),mapProp2);
+
+var marker2=new google.maps.Marker(&#123;
+  position:myCenter2,
+  animation:google.maps.Animation.BOUNCE
+  &#125;);
+
+marker2.setMap(map2);
+&#125;
+
+google.maps.event.addDomListener(window, 'load', initialize2);
+
+
+&lt;/script&gt;
+
+
+
+&lt;div class="jumbotron"&gt;
+    &lt;h1&gt;&#123;&#123;title&#125;&#125;&lt;/h1&gt;
+    &lt;p class="lead"&gt;&#123;&#123;message&#125;&#125;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class="row"&gt;
+    &lt;div class="col-md-3"&gt;
+        &lt;address&gt;
+            &lt;h4&gt;Peter Kessler&lt;/h4&gt;&lt;br /&gt;
+            Schwandenholzstr. 238&lt;br /&gt;
+            8046 Zürich&lt;br /&gt;&lt;br /&gt;
+            Switzerland&lt;br /&gt;&lt;br /&gt;
+            &lt;abbr title="Phone"&gt;P:&lt;/abbr&gt;
+            +41 79 670 01 13
+            &lt;br /&gt;&lt;br /&gt;
+        &lt;/address&gt;
+
+        &lt;address&gt;
+            &lt;span class="glyphicon glyphicon-envelope" aria-hidden="true"&gt;&lt;/span&gt;&lt;strong&gt;&nbsp;&nbsp;Mail:&lt;/strong&gt; &lt;a href="mailto:peter@pkmlp.ch"&gt;&nbsp;&nbsp;peter@pkmlp.ch&lt;/a&gt;&lt;br /&gt;
+            &lt;span class="glyphicon glyphicon-globe" aria-hidden="true"&gt;&lt;/span&gt;&lt;strong&gt;&nbsp;&nbsp;Web:&lt;/strong&gt; &lt;a href="http://www.pkmlp.ch" target="_blank"&gt;&nbsp;&nbsp;www.pkmlp.ch&lt;/a&gt;
+        &lt;/address&gt;
+    &lt;/div&gt;
+    &lt;div class="col-md-9"&gt;
+        &lt;div id="googleMap" style="width:100&#37;;height:275px;"&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="row"&gt;
+    &lt;div class="col-md-12" style="margin-top:25px; margin-bottom:75px"&gt;
+        &lt;div id="googleMap2" style="width:100&#37;;height:425px;"&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&#123;&#37; endblock &#37;&#125;
+
+                        </code></pre>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="tab-pane fade" id="dashboard">
+                <div class="row">
+                    <div style="padding:0 20px">
+                        <p>The HTML-Source-Code of dashboard.html:<br></p>
+                        <pre class="line-numbers"><code class="language-markup">
+
+    this side is subject to be changed constantly.
+    right-click on the page and select view source-code.
+                        </code></pre>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="tab-pane fade" id="login">
+                <div class="row">
+                    <div style="padding:0 20px">
+                        <p>The HTML-Source-Code of login.html:<br></p>
+                        <pre class="line-numbers"><code class="language-markup">
+
+&#123;% extends "layout.html" %&#125;
+
+&#123;% block content %&#125;
+
+&lt;div class="jumbotron"&gt;
+    &lt;h1&gt;Login&lt;/h1&gt;
+    &lt;p class="lead"&gt;Login is required for full access to the page content&lt;/p&gt;
+&lt;/div&gt;
+
+
+&lt;div class="row"&gt;
+    &lt;div class="col-md-12"&gt;&lt;br&gt;
+        &lt;form action="" class="form-inline" method="post"&gt;
+            &lt;i class="glyphicon glyphicon-user"&gt;&nbsp;&lt;/i&gt;&lt;input type="text" class="form-control" placeholder="Username" required autofocus name=username value="&#123;&#123;request.form.username&#125;&#125;"&gt;&lt;br&gt;&lt;br&gt;
+            &lt;i class="glyphicon glyphicon-lock"&gt;&nbsp;&lt;/i&gt;&lt;input type="password" class="form-control" placeholder="Password" required name=password value="&#123;&#123;request.form.password&#125;&#125;"&gt;&lt;br&gt;&lt;br&gt;
+            &lt;button class="btn btn-primary" type="submit"&gt;Login&lt;/button&gt;
+            &nbsp;&nbsp;&#123;&#123;error&#125;&#125;&lt;br&gt;
+        &lt;/form&gt;&lt;br&gt;&lt;br&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+
+&#123;% endblock %&#125;
+
+
+                        </code></pre>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="tab-pane fade" id="register">
+                <div class="row">
+                    <div style="padding:0 20px">
+                        <p>The HTML-Source-Code of register.html:<br></p>
+                        <pre class="line-numbers"><code class="language-markup">
+
+&#123;&#37; extends "layout.html" &#37;&#125;
+
+&#123;&#37; block content &#37;&#125;
+
+&lt;div class="jumbotron"&gt;
+    &lt;h1&gt;Register&lt;/h1&gt;
+    &lt;p class="lead"&gt;Register to get a login for full access to the page content&lt;sup&gt;1&lt;/sup&gt;&lt;/p&gt;
+    &lt;small&gt;1: If you're already logged in, you'll be logged out and logged in with the new created account&lt;/small&gt;
+&lt;/div&gt;
+
+
+&lt;div class="row"&gt;
+    &lt;div class="col-md-12"&gt;&lt;br&gt;
+        &lt;form action="" class="form-inline" method="post"&gt;
+            &lt;i class="glyphicon glyphicon-envelope"&gt;&nbsp;&lt;/i&gt;&lt;input type="text" class="form-control" placeholder="eMail" required autofocus name=email value="&#123;&#123;request.form.email&#125;&#125;"&gt;&lt;br&gt;&lt;br&gt;
+            &lt;i class="glyphicon glyphicon-user"&gt;&nbsp;&lt;/i&gt;&lt;input type="text" class="form-control" placeholder="Username" required name=username value="&#123;&#123;request.form.username&#125;&#125;"&gt;&lt;br&gt;&lt;br&gt;
+            &lt;i class="glyphicon glyphicon-lock"&gt;&nbsp;&lt;/i&gt;&lt;input type="password" class="form-control" placeholder="Password" required name=password value="&#123;&#123;request.form.password&#125;&#125;"&gt;&lt;br&gt;&lt;br&gt;
+            &lt;i class="glyphicon glyphicon-lock"&gt;&nbsp;&lt;/i&gt;&lt;input type="password" class="form-control" placeholder="Repeat Password" required name=confirm value="&#123;&#123;request.form.confirm&#125;&#125;"&gt;&lt;br&gt;&lt;br&gt;
+            &lt;button class="btn btn-primary" type="submit"&gt;Register&lt;/button&gt;
+            &nbsp;&nbsp;&#123;&#123;error&#125;&#125;&lt;br&gt;
+        &lt;/form&gt;&lt;br&gt;&lt;br&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+
+&#123;&#37; endblock &#37;&#125;
+
+
+                        </code></pre>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="tab-pane fade" id="index">
+                <div class="row">
+                    <div style="padding:0 20px">
+                        <p>The HTML-Source-Code of index.html:<br></p>
+                        <pre class="line-numbers"><code class="language-markup">
+
+&#123;&#37; extends "layout.html" &#37;&#125;
+
+&#123;&#37; block content &#37;&#125;
+
+&lt;div id="carousel-example-generic" class="carousel slide" data-ride="carousel"&gt;
+  &lt;!-- Indicators --&gt;
+  &lt;ol class="carousel-indicators"&gt;
+    &lt;li data-target="#carousel-example-generic" data-slide-to="0" class="active"&gt;&lt;/li&gt;
+    &lt;li data-target="#carousel-example-generic" data-slide-to="1"&gt;&lt;/li&gt;
+    &lt;li data-target="#carousel-example-generic" data-slide-to="2"&gt;&lt;/li&gt;
+  &lt;/ol&gt;
+
+  &lt;!-- Wrapper for slides --&gt;
+  &lt;div class="carousel-inner"&gt;
+    &lt;div class="item active"&gt;
+      &lt;img src="/static/images/logo_ubuntu.jpg"&gt;
+      &lt;div class="carousel-caption"&gt;
+          &lt;h3&gt;Ubuntu&lt;/h3&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="item"&gt;
+      &lt;img src="/static/images/logo_apple.jpg"&gt;
+      &lt;div class="carousel-caption"&gt;
+          &lt;h3&gt;Mac&lt;/h3&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="item"&gt;
+      &lt;img src="/static/images/logo_windows.jpg"&gt;
+      &lt;div class="carousel-caption"&gt;
+          &lt;h3&gt;Windows&lt;/h3&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Controls --&gt;
+  &lt;a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev"&gt;
+    &lt;span class="glyphicon glyphicon-chevron-left"&gt;&lt;/span&gt;
+  &lt;/a&gt;
+  &lt;a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next"&gt;
+    &lt;span class="glyphicon glyphicon-chevron-right"&gt;&lt;/span&gt;
+  &lt;/a&gt;
+&lt;/div&gt; &lt;!-- Carousel --&gt;
+
+&#123;&#37; endblock &#37;&#125;
+
+
+                        </code></pre>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="tab-pane fade" id="layout">
+                <div class="row">
+                    <div style="padding:0 20px">
+                        <p>The HTML-Source-Code of layout.html:<br></p>
+                        <pre class="line-numbers"><code class="language-markup">
+
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="utf-8" /&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;&#123;&#123;title&#125;&#125; - Hello Flask&lt;/title&gt;
+    &lt;link rel="stylesheet" type="text/css" href="/static/content/bootstrap.min.css"&gt;
+    &lt;link rel="stylesheet" type="text/css" href="/static/content/bootstrap-theme.min.css"&gt;
+    &lt;link rel="stylesheet" type="text/css" href="/static/content/site.css"&gt;
+    &lt;link rel="stylesheet" href="/static/content/prism.css"&gt;
+    &lt;link rel='shortcut icon' href='/static/images/favicon.ico'&gt;
+    &lt;script src="/static/scripts/modernizr-2.6.2.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+
+
+&lt;body&gt;
+
+    &lt;!-- Fixe Menues der Applikation --&gt;
+
+    &lt;div class="navbar navbar-inverse navbar-fixed-top"&gt;
+        &lt;div class="container"&gt;
+            &lt;a class="navbar-brand" href="http://www.pkmlp.ch" target="_blank"&gt;
+                &lt;img id="brand-image" alt="WbeSiteLogo" src="/static/images/pkmlpLogo.png"/&gt;
+            &lt;/a&gt;
+            &lt;div class="navbar-header"&gt;
+                &lt;button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"&gt;
+                    &lt;span class="icon-bar"&gt;&lt;/span&gt;
+                    &lt;span class="icon-bar"&gt;&lt;/span&gt;
+                    &lt;span class="icon-bar"&gt;&lt;/span&gt;
+                    &lt;span class="icon-bar"&gt;&lt;/span&gt;
+                    &lt;span class="icon-bar"&gt;&lt;/span&gt;
+                    &lt;span class="icon-bar"&gt;&lt;/span&gt;
+                    &lt;span class="icon-bar"&gt;&lt;/span&gt;
+                    &lt;span class="icon-bar"&gt;&lt;/span&gt;
+                &lt;/button&gt;
+            &lt;/div&gt;
+            &lt;div class="navbar-collapse collapse"&gt;
+                &lt;ul class="nav navbar-nav"&gt;
+                    &lt;li&gt;&lt;a href="&#123;&#123; url_for('index') &#125;&#125;"&gt;Home&lt;/a&gt;&lt;/li&gt;
+                    &lt;li&gt;&lt;a href="&#123;&#123; url_for('dashboard') &#125;&#125;"&gt;Dashboard&lt;/a&gt;&lt;/li&gt;
+                    &lt;li&gt;&lt;a href="&#123;&#123; url_for('about') &#125;&#125;"&gt;About&lt;/a&gt;&lt;/li&gt;
+                    &lt;li&gt;&lt;a href="&#123;&#123; url_for('contact') &#125;&#125;"&gt;Contact&lt;/a&gt;&lt;/li&gt;
+                &lt;/ul&gt;
+                &lt;ul class="nav navbar-nav navbar-right"&gt;
+                    &#123;% if session.logged_in %&#125;
+                        &lt;li&gt;&lt;a href="&#123;&#123; url_for('logout') &#125;&#125;"&gt;&lt;i class="glyphicon glyphicon-log-out"&gt;&lt;/i&gt;&nbsp;Logout&lt;/a&gt;&lt;/li&gt;
+                        &lt;li&gt;&lt;a href="&#123;&#123; url_for('delete') &#125;&#125;"&gt;&lt;i class="glyphicon glyphicon-remove-circle"&gt;&lt;/i&gt;&nbsp;Delete Account&lt;/a&gt;&lt;/li&gt;
+                    &#123;% else %&#125;
+                        &lt;li&gt;&lt;a href="&#123;&#123; url_for('login') &#125;&#125;"&gt;&lt;i class="glyphicon glyphicon-log-in"&gt;&lt;/i&gt;&nbsp;Login&lt;/a&gt;&lt;/li&gt;
+                        &lt;li&gt;&lt;a href="&#123;&#123; url_for('register') &#125;&#125;"&gt;&lt;i class="glyphicon glyphicon-user"&gt;&lt;/i&gt;&nbsp;Create Account&lt;/a&gt;&lt;/li&gt;
+                    &#123;% endif %&#125;
+                &lt;/ul&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+
+    &lt;div class="container body-content"&gt;
+
+        &lt;!-- Logik fuer die Flash-Messages  --&gt;
+
+        &#123;% with messages = get_flashed_messages() %&#125;
+          &#123;% if messages %&#125;
+            &#123;% for message in messages %&#125;
+              &#123;% if message == "Dashboard is available for logged in users only" %&#125;
+                &lt;div class="alert alert-danger alert-dismissible" role="alert" style="margin-top:15px"&gt;
+                    &lt;button type="button" class="close" data-dismiss="alert" aria-label="Close"&gt;&lt;span aria-hidden="true"&gt;×&lt;/span&gt;&lt;/button&gt;
+                     &#123;&#123; message &#125;&#125;
+                &lt;/div&gt;
+              &#123;% else %&#125;
+                &lt;div class="alert alert-warning alert-dismissible" role="alert" style="margin-top:15px"&gt;
+                    &lt;button type="button" class="close" data-dismiss="alert" aria-label="Close"&gt;&lt;span aria-hidden="true"&gt;×&lt;/span&gt;&lt;/button&gt;
+                     &#123;&#123; message &#125;&#125;
+                &lt;/div&gt;
+              &#123;% endif %&#125;
+            &#123;% endfor %&#125;
+          &#123;% endif %&#125;
+        &#123;% endwith %&#125;
+
+
+        &lt;!-- Freier Bereich der Applikation, der von jeder Seite individuell gefüllt wird  --&gt;
+        &#123;% block content %&#125;&#123;% endblock %&#125;
+
+    &lt;/div&gt;
+
+
+    &lt;!-- Fixe Fusszeile der Applikation --&gt;
+
+    &lt;div class="navbar navbar-default navbar-fixed-bottom"&gt;
+        &lt;div class="container"&gt;
+                &lt;p class = "navbar-text pull-left"&gt;&copy; &#123;&#123; year &#125;&#125; Peter Kessler&lt;/p&gt;
+                &lt;a href = "http://www.pkmlp.ch" target="_blank" class = "navbar-btn btn-primary btn pull-right"&gt;www.pkmlp.ch&lt;/a&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+&lt;/body&gt;
+
+    &lt;script src="/static/scripts/jquery-1.10.2.min.js"&gt;&lt;/script&gt;
+    &lt;script src="/static/scripts/bootstrap.min.js"&gt;&lt;/script&gt;
+    &lt;script src="/static/scripts/respond.min.js"&gt;&lt;/script&gt;
+    &lt;script src="/static/scripts/prism.js"&gt;&lt;/script&gt;
+    &#123;% block scripts %&#125;&#123;% endblock %&#125;
+
+&lt;/html&gt;
+
+
+                        </code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

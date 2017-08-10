@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="jumbotron">
+    <h1>Register</h1>
+    <p class="lead">Register to get a login for full access to the page content<sup>1</sup></p>
+    <small>1: If you're already logged in, you'll be logged out and logged in with the new created account</small>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12"><br>
+        <form action="" class="form-inline" method="post">
+            <i class="glyphicon glyphicon-envelope">&nbsp;</i><input type="text" class="form-control" placeholder="eMail" required autofocus name=email value="{{request.form.email}}"><br><br>
+            <i class="glyphicon glyphicon-user">&nbsp;</i><input type="text" class="form-control" placeholder="Username" required name=username value="{{request.form.username}}"><br><br>
+            <i class="glyphicon glyphicon-lock">&nbsp;</i><input type="password" class="form-control" placeholder="Password" required name=password value="{{request.form.password}}"><br><br>
+            <i class="glyphicon glyphicon-lock">&nbsp;</i><input type="password" class="form-control" placeholder="Repeat Password" required name=confirm value="{{request.form.confirm}}"><br><br>
+            <button class="btn btn-primary" type="submit">Register</button>
+            &nbsp;&nbsp;{{error}}<br>
+        </form><br><br>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Generated build file-->
+<!--XDEV 4.1.3 @ 27.09.2015 15:12:40-->
+<project name="CaseManagementSQLite" basedir="." default="deploy">
+    <target name="deploy">
+        <taskdef name="GenerateApplication" classname="xdev.util.builder.ant.tasks.GenerateApplication" />
+        <GenerateApplication project="CaseManagementSQLite" todir="C:\Users\peter\polybox\SwissICT\CMDB_Jar" cleartodir="true" opentodir="true" vmoptions="-XX:+UseParallelGC -XX:+CMSClassUnloadingEnabled -Dsun.java2d.noddraw -Xms64m -Xmx512m" main="Fenster.CaseManagement" executablejar="true" />
+    </target>
+</project>
+

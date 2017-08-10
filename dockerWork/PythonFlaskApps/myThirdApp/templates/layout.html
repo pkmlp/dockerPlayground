@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}} - Hello Flask</title>
+    <link rel="stylesheet" type="text/css" href="/static/content/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/content/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/content/site.css">
+    <link rel="stylesheet" href="/static/content/prism.css">
+    <link rel='shortcut icon' href='/static/images/favicon.ico'>
+    <script src="/static/scripts/modernizr-2.6.2.js"></script>
+</head>
+
+
+<body>
+
+    <!-- Fixe Menues der Applikation -->
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="http://www.pkmlp.ch" target="_blank">
+                <img id="brand-image" alt="WbeSiteLogo" src="/static/images/pkmlpLogo.png"/>
+            </a>
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                    <li><a href="{{ url_for('about') }}">About</a></li>
+                    <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    {% if session.logged_in %}
+                        <li><a href="{{ url_for('logout') }}"><i class="glyphicon glyphicon-log-out"></i>&nbsp;Logout</a></li>
+                        <li><a href="{{ url_for('delete') }}"><i class="glyphicon glyphicon-remove-circle"></i>&nbsp;Delete Account</a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('login') }}"><i class="glyphicon glyphicon-log-in"></i>&nbsp;Login</a></li>
+                        <li><a href="{{ url_for('register') }}"><i class="glyphicon glyphicon-user"></i>&nbsp;Create Account</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container body-content">
+
+        <!-- Logik fuer die Flash-Messages  -->
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              {% if message == "Dashboard is available for logged in users only" %}
+                <div class="alert alert-danger alert-dismissible" role="alert" style="margin-top:15px">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                     {{ message }}
+                </div>
+              {% else %}
+                <div class="alert alert-warning alert-dismissible" role="alert" style="margin-top:15px">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                     {{ message }}
+                </div>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+
+        <!-- Freier Bereich der Applikation, der von jeder Seite individuell gefüllt wird  -->
+        {% block content %}{% endblock %}
+
+    </div>
+
+
+    <!-- Fixe Fusszeile der Applikation -->
+
+    <div class="navbar navbar-default navbar-fixed-bottom">
+        <div class="container" style="padding-left:0px">
+                <p class="navbar-text pull-left"><span class="glyphicon glyphicon-copyright-mark"></span>
+                    &nbsp;&nbsp;{{ year }} Peter Kessler</p>
+                <a href="http://www.pkmlp.ch" target="_blank" class="navbar-btn btn-primary btn pull-right">www.pkmlp.ch</a>
+        </div>
+    </div>
+
+</body>
+
+
+    <script src="/static/scripts/jquery-1.10.2.min.js"></script>
+    <script src="/static/scripts/bootstrap.min.js"></script>
+    <script src="/static/scripts/respond.min.js"></script>
+    <script src="/static/scripts/prism.js"></script>
+    {% block scripts %}{% endblock %}
+
+</html>

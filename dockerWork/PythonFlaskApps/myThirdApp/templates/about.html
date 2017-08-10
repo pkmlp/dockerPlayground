@@ -1,0 +1,94 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+
+<div class="jumbotron">
+    <h1>{{title}}</h1>
+    <p class="lead">{{message}}</p>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Python ...</h2>
+        <p>... is powerful and fast; plays well with others; runs everywhere; is friendly and easy to learn; and
+            it is Open. Python can be easy to pick up whether you're a first time programmer or you're experienced with
+            other languages. </p>
+        <p><a class="btn btn-default" href="https://www.python.org/" target="_blank" style="margin-top:15px">Learn more &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Flask ...</h2>
+        <p>... is a micro web development framework for Python. Flask is based on Werkzeug, Jinja 2 and good intentions.
+            Even though Flask is a rather new project, there has already been a healthy community evolved around it. </p>
+        <p><a class="btn btn-default" href="http://flask.pocoo.org/docs/" target="_blank" style="margin-top:15px">Learn more &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Bootstrap ...</h2>
+        <p>... is the most popular HTML, CSS, and JS framework for developing responsive, mobile first web sites.
+            It is a sleek, intuitive, and powerful front-end framework for faster and easier web development.</p>
+        <p><a class="btn btn-default" href="http://getbootstrap.com/" target="_blank" style="margin-top:15px">Learn more &raquo;</a></p>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <br><br><br><br><br>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#example-modal-lg">What's in, what's not in</button>
+        <br><br><br><br><br>
+    </div>
+</div>
+
+
+<!-- Modal HTML -->
+<div class="modal fade" id="example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="example-modal-lg" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header modal-header-primary">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h2><i class="glyphicon glyphicon-thumbs-up"></i>&nbsp;&nbsp;Topics in this Example</h2>
+            </div>
+            <div class="modal-body">
+                <p>The goal of this small example is to highlight the strength of each of the Triumvirate:
+                    Python, Flask and Bootstrap.<br><br>The main topics in this example are:</p><ul>
+                    <li>Logic-Programming with Python,</li>
+                    <li>Web-Programming with Flask and </li>
+                    <li>GUI-Programming with Bootstrap.</li>
+                    </ul><p><br>But that's not all. This example also includes the more advanced topics:</p><ul>
+                    <li>User-Authentication and</li>
+                    <li>Database Programming. </li>
+                    </ul><br>
+                <p class="text-warning">And yes: the only reason for this is to have an example
+                    of a Bootstrap Modal.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-info" role="alert" style="margin-top:35px;">
+            <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+            &nbsp;&nbsp;&nbsp;Can&rsquo;t find what you&rsquo;re looking for? Please check:
+            <a href="http://www.pkmlp.ch" target="_blank"><strong> Peter Kessler&rsquo;s Moodle Lernportal </strong></a> in the Internet!
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-info" role="alert" style="margin-top:5px; margin-bottom:75px">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            &nbsp;&nbsp;&nbsp;Still not found what you&rsquo;re looking for? Please check:
+            <a href="http://www.google.ch/webhp?hl=en#hl=en-CH&q=python+flask+bootstrap" target="_blank"><strong> Developer&rsquo;s number 1 Tool </strong></a> in the Internet!
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
