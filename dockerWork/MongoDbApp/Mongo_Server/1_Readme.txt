@@ -1,15 +1,15 @@
 
-=================================================
-Schritt 1: Erstellen des Images anhand Dockerfile
-=================================================
+==================================================
+Schritt 1: Erstellen des Images mit dem Dockerfile
+==================================================
 
 docker build -t mongoserver .
 
 
 
-=================================
-Schritt 2 Erstellen des Conainers
-=================================
+==================================
+Schritt 2 Erstellen des Containers
+==================================
 
 docker run -d \
 --name MongoDB_Server \
