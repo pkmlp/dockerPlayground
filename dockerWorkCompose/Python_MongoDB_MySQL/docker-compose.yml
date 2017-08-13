@@ -1,0 +1,47 @@
+version: "3"
+
+services:
+
+  MySqlServer:
+    build: 
+      context: ./MySQL_Server/
+      dockerfile: Dockerfile
+    image: mysql_server
+    environment:
+      - MYSQL_ROOT_PASSWORD="pkmlp"
+    volumes: 
+      - mysql_daten:/var/lib/mysql
+    networks: 
+      - dev_netz
+
+  MongoServer:
+    build: 
+      context: ./Mongo_Server/
+      dockerfile: Dockerfile
+    image: mongo_server
+    ports:
+      - 27017:27017 
+    environment:
+      - MONGODB_ADMIN_USER="mongoAdmin" 
+      - MONGODB_ADMIN_PASS="pkmlp" 
+    volumes: 
+      - mongodb_daten:/data/db
+    networks: 
+      - dev_netz
+
+  PythonJupyter:
+    image: jupyter/scipy-notebook
+    command: start-notebook.sh --NotebookApp.token=''
+    ports:
+      - 8888:8888 
+    volumes:
+      - /home/pkmlp/gitRepos/dockerPlayground/dockerWorkCompose/Python_MongoDB_MySQL/PythonJupyter/Notebooks:/home/jovyan/work
+    networks: 
+      - dev_netz
+
+networks:
+    dev_netz:
+
+volumes:
+    mysql_daten:
+    mongodb_daten: 
