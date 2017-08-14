@@ -1,0 +1,62 @@
+version: "3"
+services:
+
+    MySQL_Server:
+        image: mysql:5.7
+        environment:
+            - MYSQL_ROOT_PASSWORD=pkmlp
+        volumes: 
+            - mysql_daten:/var/lib/mysql
+        networks: 
+            - db_netz
+
+    MySQL_Gui:
+        build:
+            context: ./MySQL_Gui/
+            dockerfile: Dockerfile
+        image: mysql_gui
+        environment:
+            - DISPLAY=unix:0
+        volumes: 
+            - /home/pkmlp/gitRepos/dockerPlayground/dockerWorkCompose/Python_MySQL_MongoDB/MySQL_Gui/MySqlScripts:/usr/src/mysqlScripts
+            - /tmp/.X11-unix:/tmp/.X11-unix
+        networks: 
+            - db_netz
+        depends_on: 
+            - MySQL_Server
+
+    Mongo_Server:
+        build:
+            context: ./Mongo_Server/
+            dockerfile: Dockerfile
+        image: mongo_server
+        environment:
+            - MONGODB_ADMIN_USER=mongoAdmin
+            - MONGODB_ADMIN_PASS=pkmlp
+        ports:
+            - 27017:27017
+        volumes: 
+            - mongo_daten:/data/db
+        networks: 
+            - db_netz
+
+    Mongo_Gui:
+        image: mongo-express
+        environment:
+            - ME_CONFIG_MONGODB_SERVER=Mongo_Server
+            - ME_CONFIG_MONGODB_ENABLE_ADMIN=false
+            - ME_CONFIG_MONGODB_AUTH_DATABASE=admin
+            - ME_CONFIG_MONGODB_AUTH_USERNAME=mongoAdmin
+            - ME_CONFIG_MONGODB_AUTH_PASSWORD=pkmlp
+        ports:
+            - 8081:8081
+        networks:
+            - db_netz
+
+networks:
+    db_netz:
+
+volumes:
+    mysql_daten:
+    mongo_daten: 
+

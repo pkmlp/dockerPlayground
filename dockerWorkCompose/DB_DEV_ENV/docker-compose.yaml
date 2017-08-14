@@ -2,12 +2,9 @@ version: "3"
 services:
 
     DB_Server:
-        build: 
-            context: ./DB_Server/
-            dockerfile: Dockerfile
-        image: db_server
+        image: mysql:5.7
         environment:
-            - MYSQL_ROOT_PASSWORD="pkmlp"
+            - MYSQL_ROOT_PASSWORD=pkmlp
         volumes: 
             - db_daten:/var/lib/mysql
         networks: 
@@ -21,7 +18,7 @@ services:
         environment:
             - DISPLAY=unix:0
         volumes: 
-            - /home/pkmlp/dockerWork/MySqlApps/myThirdApp/DB_Gui/mySqlShare:/usr/src/mysql
+            - /home/pkmlp/gitRepos/dockerPlayground/dockerWorkCompose/DB_DEV_ENV/DB_Gui/mySqlShare:/usr/src/mysql
             - /tmp/.X11-unix:/tmp/.X11-unix
         networks: 
             - db_netz
