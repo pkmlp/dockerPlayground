@@ -10,6 +10,15 @@ services:
         networks: 
             - db_netz
 
+    MyPHP_Gui:
+        image: phpmyadmin/phpmyadmin
+        environment:
+            - PMA_HOST=MySQL_Server
+        ports:
+            - 8080:80
+        networks:
+            - db_netz
+
     MySQL_Gui:
         build:
             context: ./MySQL_Gui/
