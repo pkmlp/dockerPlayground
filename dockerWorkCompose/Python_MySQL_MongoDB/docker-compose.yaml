@@ -10,6 +10,7 @@ services:
             - MYSQL_ROOT_PASSWORD=pkmlp
         volumes: 
             - mysql_daten:/var/lib/mysql
+            - /home/pkmlp/gitRepos/dockerPlayground/dockerWorkCompose/Python_MySQL_MongoDB/MySQL_Server/MySqlScripts:/usr/src/mysqlScripts
         networks:
             db_netz:
                 aliases: 
@@ -22,8 +23,6 @@ services:
         domainname: MySQL_Gui
         environment:
             - PMA_HOST=MySQL_Server
-        volumes: 
-            - /home/pkmlp/gitRepos/dockerPlayground/dockerWorkCompose/Python_MySQL_MongoDB/MySQL_Gui/MySqlScripts:/usr/src/mysqlScripts
         ports:
             - 8080:80
         networks:
