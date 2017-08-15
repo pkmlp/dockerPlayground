@@ -39,3 +39,10 @@ Wichtige Hinweise:
     Dies passiert, wenn das Mongo_Gui versucht sich zum Mongo_Server zu verbinden, 
     bevor dieser up and running ist.
 
+    Dem MySQL Server ist ein Volume für SQL-Scripts gemounted. Um diese ausführen zu können, 
+        > docker exec -it MySQL-Server bash   --> öffnene einer Bash-Shell im Container
+        > mysql -u root -p < scriptname.sql   --> führt das Script aus
+
+    Der Mongo Server kann nicht über den hostname angesprochen werden. Mit der IP Adresse 
+    funktioniert es aber. Die IP Adresse ist zu finden mit:
+        > docker inspect Mongo_Server   --> unter config ist die IP Adresse zu finden
