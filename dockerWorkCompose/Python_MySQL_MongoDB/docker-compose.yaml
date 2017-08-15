@@ -89,7 +89,7 @@ services:
         networks:
             db_netz:
                 aliases: 
-                    - Python_Server      
+                    - Python_Jupyter
 
 networks:
     db_netz:
