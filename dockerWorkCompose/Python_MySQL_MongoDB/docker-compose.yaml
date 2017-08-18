@@ -13,6 +13,7 @@ services:
             - /home/pkmlp/gitRepos/dockerPlayground/dockerWorkCompose/Python_MySQL_MongoDB/MySQL_Server/MySqlScripts:/usr/src/mysqlScripts
         networks:
             db_netz:
+                ipv4_address: 192.168.0.60
                 aliases: 
                     - MySQL_Server
 
@@ -27,6 +28,7 @@ services:
             - 8080:80
         networks:
             db_netz:
+                ipv4_address: 192.168.0.50
                 aliases: 
                     - MySQL_Gui
         depends_on: 
@@ -49,6 +51,7 @@ services:
             - mongo_daten:/data/db
         networks:
             db_netz:
+                ipv4_address: 192.168.0.30
                 aliases: 
                     - Mongo_Server
 
@@ -67,6 +70,7 @@ services:
             - 8081:8081
         networks:
             db_netz:
+                ipv4_address: 192.168.0.20
                 aliases: 
                     - Mongo_Gui
         depends_on:
@@ -87,12 +91,16 @@ services:
         command: ["start-notebook.sh", "--NotebookApp.token=''"]
         networks:
             db_netz:
+                ipv4_address: 192.168.0.10
                 aliases: 
                     - Python_Jupyter
 
 networks:
     db_netz:
-        driver: bridge
+        ipam:
+            driver: default
+            config: 
+                - subnet: 192.168.0.0/24
 
 volumes:
     mysql_daten:
