@@ -40,7 +40,7 @@ Wichtige Hinweise:
     bevor dieser up and running ist.
 
     Dem MySQL Server ist ein Volume für SQL-Scripts gemounted. Um diese ausführen zu können, 
-        > docker exec -it MySQL-Server bash   --> öffnene einer Bash-Shell im Container
+        > docker exec -it MySQL_Server bash   --> öffnene einer Bash-Shell im Container
         > mysql -u root -p < scriptname.sql   --> führt das Script aus
 
     PythonJupyter: Der Mongo Server kann nicht über den hostname angesprochen werden.  
