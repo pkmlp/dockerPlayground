@@ -10,7 +10,7 @@ services:
             - MYSQL_ROOT_PASSWORD=pkmlp
         volumes: 
             - mysql_daten:/var/lib/mysql
-            - /home/pkmlp/gitRepos/dockerPlayground/dockerWorkCompose/Python_MySQL_MongoDB/MySQL_Server/MySqlScripts:/usr/src/mysqlScripts
+            - ./MySQL_Server/MySqlScripts:/usr/src/mysqlScripts
         networks:
             db_netz:
                 ipv4_address: 192.168.0.60
@@ -85,7 +85,7 @@ services:
         hostname: Python_Jupyter
         domainname: Python_Jupyter
         volumes:
-            - /home/pkmlp/gitRepos/dockerPlayground/dockerWorkCompose/Python_MySQL_MongoDB/PythonJupyter/Notebooks:/home/jovyan/work
+            - ./PythonJupyter/Notebooks:/home/jovyan/work
         ports:
             - 8082:8888
         command: ["start-notebook.sh", "--NotebookApp.token=''"]
