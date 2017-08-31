@@ -30,4 +30,3 @@ Schritt 2: Starten den Python Container
                  --env DISPLAY=unix$DISPLAY \
                  --name Python_GUI_App \
                  python_gui_app python3 /usr/src/PythonGuiApp/pkmlpCounter.py
-
