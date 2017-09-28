@@ -10,7 +10,7 @@ Folgende Befehle erstellen den Portainer Container:
                  -v portainer_data:/data \
                  portainer/portainer
 
-
+Das GUI (Portainer) kann dann mit einem Internet-Browser mit localhost:9000 gestartet werden.
 
 Portainer ist eine grafische Oberfläche für Docker, mit der man sich einen raschen Überblick über den Zustand eines Hosts beziehungsweise eines 
 Clusters verschaffen kann.
