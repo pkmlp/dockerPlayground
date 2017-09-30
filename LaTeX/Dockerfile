@@ -1,5 +1,5 @@
 FROM debian:stretch 
-MAINTAINER Julien Giovaresco <dev@giovaresco.fr> 
+MAINTAINER pkmlp <pkmlp@pkmlp.ch> 
 
 RUN sed -i 's/main/main contrib non-free/g' /etc/apt/sources.list 
 
