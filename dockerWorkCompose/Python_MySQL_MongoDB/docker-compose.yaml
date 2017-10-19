@@ -1,0 +1,107 @@
+version: "3"
+services:
+
+    MySQL_Server:
+        image: mysql:5.7
+        container_name: MySQL_Server
+        hostname: MySQL_Server
+        domainname: MySQL_Server
+        environment:
+            - MYSQL_ROOT_PASSWORD=pkmlp
+        volumes: 
+            - mysql_daten:/var/lib/mysql
+            - ./MySQL_Server/MySqlScripts:/usr/src/mysqlScripts
+        networks:
+            db_netz:
+                ipv4_address: 192.168.0.60
+                aliases: 
+                    - MySQL_Server
+
+    MySQL_Gui:
+        image: phpmyadmin/phpmyadmin
+        container_name: MySQL_Gui
+        hostname: MySQL_Gui
+        domainname: MySQL_Gui
+        environment:
+            - PMA_HOST=MySQL_Server
+        ports:
+            - 8080:80
+        networks:
+            db_netz:
+                ipv4_address: 192.168.0.50
+                aliases: 
+                    - MySQL_Gui
+        depends_on: 
+            - MySQL_Server
+
+    Mongo_Server:
+        build:
+            context: ./Mongo_Server/
+            dockerfile: Dockerfile
+        image: mongo_server
+        container_name: Mongo_Server
+        hostname: Mongo_Server
+        domainname: Mongo_Server
+        environment:
+            - MONGODB_ADMIN_USER=mongoAdmin
+            - MONGODB_ADMIN_PASS=pkmlp
+        ports:
+            - 27017:27017
+        volumes: 
+            - mongo_daten:/data/db
+        networks:
+            db_netz:
+                ipv4_address: 192.168.0.30
+                aliases: 
+                    - Mongo_Server
+
+    Mongo_Gui:
+        image: mongo-express
+        container_name: Mongo_Gui
+        hostname: Mongo_Gui
+        domainname: Mongo_Gui
+        environment:
+            - ME_CONFIG_MONGODB_SERVER=Mongo_Server
+            - ME_CONFIG_MONGODB_ENABLE_ADMIN=false
+            - ME_CONFIG_MONGODB_AUTH_DATABASE=admin
+            - ME_CONFIG_MONGODB_AUTH_USERNAME=mongoAdmin
+            - ME_CONFIG_MONGODB_AUTH_PASSWORD=pkmlp
+        ports:
+            - 8081:8081
+        networks:
+            db_netz:
+                ipv4_address: 192.168.0.20
+                aliases: 
+                    - Mongo_Gui
+        depends_on:
+            - Mongo_Server
+
+    PythonJupyter:
+        build:
+            context: ./PythonJupyter/
+            dockerfile: Dockerfile
+        image: jupyter_notebook
+        container_name: Python_Jupyter
+        hostname: Python_Jupyter
+        domainname: Python_Jupyter
+        volumes:
+            - ./PythonJupyter/Notebooks:/home/jovyan/work
+        ports:
+            - 8082:8888
+        command: ["start-notebook.sh", "--NotebookApp.token=''"]
+        networks:
+            db_netz:
+                ipv4_address: 192.168.0.10
+                aliases: 
+                    - Python_Jupyter
+
+networks:
+    db_netz:
+        ipam:
+            driver: default
+            config: 
+                - subnet: 192.168.0.0/24
+
+volumes:
+    mysql_daten:
+    mongo_daten: 

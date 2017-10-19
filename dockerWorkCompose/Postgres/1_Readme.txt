@@ -1,7 +1,5 @@
 
-In diesem Beispiel nehmen wir die JavaGuiApp (CMDB) als Grundlage ABER ...
-
-... in diesem Beispiel arbeiten wir mit docker-compose um alles noch einmal stark zu vereinfachen, so dass wir den Container mit der App und den Container mit der Help mit einem einzigen Befehl starten können.
+PostgreSQL Umgebung mit PostgreSQL-Server und dem Web-GUI Adminer 
 
 
 
@@ -9,8 +7,7 @@ In diesem Beispiel nehmen wir die JavaGuiApp (CMDB) als Grundlage ABER ...
 Schritt 1: das docker-compose.yaml File bauen
 =============================================
 
-Zuerst erstellen wir ein docker-compose.yaml File, das unsere ganze Umgebung beschreibt. Im wesentlichen umfass das yaml-File alle Parameter, die wir bei den einzelnen run commands angegeben haben.
-
+Zuerst erstellen wir ein docker-compose.yaml File, das unsere ganze Umgebung beschreibt. 
 
 
 
@@ -18,18 +15,23 @@ Zuerst erstellen wir ein docker-compose.yaml File, das unsere ganze Umgebung bes
 Schritt 2: dann starten wir unsere Umgebung
 ===========================================
 
-    > xhost local:root    
     > docker-compose up -d
     
 
 
+===========================================================
+Schritt 3: dann arbeiten wir mit unserer Umgebung (Adminer)
+===========================================================
+
+    > firefox localhost:8080
+
+
 
 ===========================================
-Schritt 3: dann stoppen wir unsere Umgebung
+Schritt 4: dann stoppen wir unsere Umgebung
 ===========================================
 
-    > docker-compose stop 
-
+    > docker-compose stop
 
 
 
