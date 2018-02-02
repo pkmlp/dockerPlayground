@@ -8,14 +8,19 @@ Schritt 1: das docker-compose.yaml File bauen
 =============================================
 
 Zuerst erstellen wir ein docker-compose.yaml File, das unsere ganze Umgebung beschreibt. 
+Vor dem Starten der Umgebung sicjerstellen, dass nicht bereits ein DB-Server läuft 
+ --->  anders formuliert: sicherstellen, dass die von den Copntainern benötigten Ports 
+       nicht schon belegt/benutzt sind.
 
+    > sudo service mongod stop 
+    > sudo service mysql stop
 
 
 ===========================================
 Schritt 2: dann starten wir unsere Umgebung
 ===========================================
 
-    > xhost local:root    
+    > xhost local:root   (ist nur nötig, wenn einer der Container ein X11 GUI (z.B.MySQL Workbench) hat) 
     > docker-compose up -d
     
 
