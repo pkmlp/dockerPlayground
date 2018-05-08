@@ -27,8 +27,24 @@ Schritt 2: dann starten wir unsere Umgebung
 
 
 
+=============================================
+Schritt 3: dann arbeiten wir unserer Umgebung
+=============================================
+
+  Host-Name für Connection ist der Containername: 
+  > dbdevenv_DB_Server_1
+    
+  User-Name für Connection ist: 
+  > root
+
+ Passwort für root ist: 
+  > pkmlp
+
+
+
+
 ===========================================
-Schritt 3: dann stoppen wir unsere Umgebung
+Schritt 4: dann stoppen wir unsere Umgebung
 ===========================================
 
     > docker-compose stop
@@ -40,4 +56,5 @@ Wichtige Hinweise:
 
     > docker-compose logs      --> zeigt die logs der laufenden Services (Container)
     > docker-compose ps        --> zeigt die laufenden Services (Container)
+
 
