@@ -27,9 +27,9 @@ Schritt 2: dann starten wir unsere Umgebung
 
 
 
-=============================================
-Schritt 3: dann arbeiten wir unserer Umgebung
-=============================================
+=================================================
+Schritt 3: dann arbeiten wir mit unserer Umgebung
+=================================================
 
   Host-Name für Connection ist der Containername: 
   > dbdevenv_DB_Server_1
