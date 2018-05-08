@@ -1,5 +1,5 @@
 
-In diesem Beispiel erstellen wir eine Datenbank-Entwicklungsumgebung (MySQL mit MySQL-Workbench, MongoDB mit , PythonJupyter).
+In diesem Beispiel erstellen wir eine Datenbank-Entwicklungsumgebung (MySQL mit MySQL-Workbench, MongoDB mit MongoExpress, PythonJupyter).
 
 
 
@@ -8,7 +8,7 @@ Schritt 1: das docker-compose.yaml File bauen
 =============================================
 
 Zuerst erstellen wir ein docker-compose.yaml File, das unsere ganze Umgebung beschreibt. 
-Vor dem Starten der Umgebung sicjerstellen, dass nicht bereits ein DB-Server läuft 
+Vor dem Starten der Umgebung sicherstellen, dass nicht bereits ein DB-Server läuft 
  --->  anders formuliert: sicherstellen, dass die von den Copntainern benötigten Ports 
        nicht schon belegt/benutzt sind.
 
