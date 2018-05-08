@@ -25,8 +25,20 @@ Schritt 2: dann starten wir unsere Umgebung
     
 
 
+=================================================
+Schritt 3: dann arbeiten wir mit unserer Umgebung
+=================================================
+
+  Alle UIs sind Browser-UIs (siehe auch docker-compose.yaml File)
+
+    > Python-GUI:   http://192.168.0.10:8888   für PythonJupyter
+    > MongoDB-GUI:  http://192.168.0.20:8081   für MongoExpress
+    > MySQL-GUI:    http://192.168.0.50:27017  für PhpMyAdmin
+
+
+
 ===========================================
-Schritt 3: dann stoppen wir unsere Umgebung
+Schritt 4: dann stoppen wir unsere Umgebung
 ===========================================
 
     > docker-compose stop
