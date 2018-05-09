@@ -37,7 +37,7 @@ Schritt 3: dann arbeiten wir mit unserer Umgebung
   User-Name für Connection ist: 
   > root
 
- Passwort für root ist: 
+ Passwort für root ist (siehe auch docker-compose.yaml File): 
   > pkmlp
 
 
