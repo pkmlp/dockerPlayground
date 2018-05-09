@@ -5,7 +5,7 @@ In diesem Beispiel arbeiten wir wieder (siehe unbedingt auch myFirstDbApp und my
 
  - der erste Container enthält den DB-Server 
  - der zweite Container enthält  die MySQL Workbench, mit der wir auf dem Db-Server arbeiten wollen
- - das nemad Volume enthält die Daten des DB-Severs, die persitent gehalten werden sollen.
+ - das named Volume enthält die Daten des DB-Severs, die persitent gehalten werden sollen.
  - das Docker Netzwerk erlaubt die Kommunikation unter den beiden Containern
 
 Damit haben wir dann eine Datenbankumgebung, die komplett Containerisiert ist.
@@ -19,7 +19,7 @@ Schritt 1: Image für der DB-Server bauen
 
 Zuerst erstellen wir ein Dockerfile, mit dem wir das Image für den DB-Server erzeugen können. Dazu verwenden wir als Basis das MySQL-Image von Docker und setzen lediglich noch das root Passwort für den DB-Server.
 
-	FROM mysql:5.7 
+	FROM mysql:latest 
 	MAINTAINER Peter Kessler <pkmlp@pkmlp.ch> 
 	ENV MYSQL_ROOT_PASSWORD=pkmlp
 
@@ -38,7 +38,6 @@ Schritt 2: Image für DB-GUI bauen
 Zuerst erstellen wir ein Dockerfile, mit dem wir ein Image erzeugen können, dass lediglich die MySQL Workbench enthält
 
 	FROM ubuntu:latest 
-	MAINTAINER Peter Kessler <pkmlp@pkmlp.ch> 
 	ENV DEBIAN_FRONTEND noninteractive 
 	RUN apt-get update && apt-get install -y mysql-workbench 
 	CMD mysql-workbench
@@ -100,10 +99,3 @@ Wenn man sehen möchte wo die denn im DOcker Host abgelegt sind:
 
 
  
-
-
-
-
-
-
-

@@ -1,5 +1,4 @@
-FROM ubuntu:16.04 
-MAINTAINER Peter Kessler <pkmlp@pkmlp.ch> 
+FROM ubuntu:latest 
 
 # um Probleme mit Dialog-Wizards zu vermeiden
 ENV DEBIAN_FRONTEND noninteractive 

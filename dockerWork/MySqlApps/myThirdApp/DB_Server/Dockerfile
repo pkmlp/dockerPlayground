@@ -1,3 +1,2 @@
-FROM mysql:5.7 
-MAINTAINER Peter Kessler <pkmlp@pkmlp.ch> 
+FROM mysql:latest
 ENV MYSQL_ROOT_PASSWORD=pkmlp
