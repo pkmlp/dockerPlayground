@@ -1,8 +1,8 @@
-version: "3"
+version: "2"
 services:
 
     DB_Server:
-        image: mysql:5.7
+        image: mysql:latest
         environment:
             - MYSQL_ROOT_PASSWORD=pkmlp
         volumes: 
