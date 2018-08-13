@@ -21,17 +21,15 @@ services:
             context: ./MySQL_Gui/
             dockerfile: Dockerfile
         image: mysql_gui
-        hostname: MySQL_Gui
-        domainname: MySQL_Gui
         environment:
             - DISPLAY=unix:0
         volumes: 
-            - /home/pkmlp/gitRepos/dockerPlayground/dockerWorkCompose/DB_DEV_ENV/DB_Gui/mySqlShare:/usr/src/mysql
+            - /home/pkmlp/gitRepos/dockerPlayground/dockerWorkCompose/Python_MySQL_MongoDB_V2/MySQL_Gui/mySqlShare:/usr/src/mysql
             - /tmp/.X11-unix:/tmp/.X11-unix
         networks: 
             - db_netz
         depends_on: 
-            - DB_Server
+            - MySQL_Server
 
     Mongo_Server:
         build:
