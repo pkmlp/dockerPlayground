@@ -12,7 +12,7 @@ Vor dem Starten der Umgebung sicherstellen, dass nicht bereits ein DB-Server lä
  --->  anders formuliert: sicherstellen, dass die von den Copntainern benötigten Ports 
        nicht schon belegt/benutzt sind.
 
-    > sudo service mongod stop 
+    > sudo service mongodb stop 
     > sudo service mysql stop
 
 
@@ -33,7 +33,7 @@ Schritt 3: dann arbeiten wir mit unserer Umgebung
 
     > Python-GUI:   http://192.168.0.10:8888   für PythonJupyter
     > MongoDB-GUI:  http://192.168.0.20:8081   für MongoExpress
-    > MySQL-GUI:    http://192.168.0.50:27017  für PhpMyAdmin
+    > MySQL-GUI:    http://192.168.0.50:80     für PhpMyAdmin
 
 
 
