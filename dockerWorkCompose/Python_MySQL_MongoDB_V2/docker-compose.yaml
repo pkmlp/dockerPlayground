@@ -21,6 +21,7 @@ services:
             context: ./MySQL_Gui/
             dockerfile: Dockerfile
         image: mysql_gui
+        container_name: MySQL_Gui
         environment:
             - DISPLAY=unix:0
         volumes: 

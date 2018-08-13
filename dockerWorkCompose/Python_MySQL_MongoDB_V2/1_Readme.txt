@@ -1,8 +1,5 @@
 
-Not yet finished !!!!!!!!
-
-In diesem Beispiel erstellen wir eine Datenbank-Entwicklungsumgebung (MySQL mit MySQL-Workbench, MongoDB mit , PythonJupyter).
-
+In diesem Beispiel erstellen wir eine Datenbank-Entwicklungsumgebung (MySQL mit MySQL-Workbench, MongoDB mit MongoExpress, PythonJupyter).
 
 
 =============================================
@@ -10,12 +7,13 @@ Schritt 1: das docker-compose.yaml File bauen
 =============================================
 
 Zuerst erstellen wir ein docker-compose.yaml File, das unsere ganze Umgebung beschreibt. 
-Vor dem Starten der Umgebung sicherstellen, dass nicht bereits ein DB-Server läuft 
+Vor dem Starten der Umgebung sicherstellen, dass nicht bereits DB-Server laufen 
  --->  anders formuliert: sicherstellen, dass die von den Copntainern benötigten Ports 
        nicht schon belegt/benutzt sind.
 
     > sudo service mongodb stop 
     > sudo service mysql stop
+
 
 
 ===========================================
@@ -27,8 +25,25 @@ Schritt 2: dann starten wir unsere Umgebung
     
 
 
+=================================================
+Schritt 3: dann arbeiten wir mit unserer Umgebung
+=================================================
+
+  Die UIs für Jupyter und MongoDB sind Browser-UIs (siehe auch docker-compose.yaml File)
+
+    > Python-GUI:   http://192.168.0.10:8888   für PythonJupyter
+    > MongoDB-GUI:  http://192.168.0.20:8081   für MongoExpress
+
+  Das UI für MySQL (MySQL_Gui) ist ein X11-Container und startet automatisch.
+
+    Für die Connection der MySQL-Workbench zum Server gelten:
+    - hostname: MySQL_Server
+    - password: pkmlp
+
+
+
 ===========================================
-Schritt 3: dann stoppen wir unsere Umgebung
+Schritt 4: dann stoppen wir unsere Umgebung
 ===========================================
 
     > docker-compose stop
@@ -46,10 +61,9 @@ Wichtige Hinweise:
     Dies passiert, wenn das Mongo_Gui versucht sich zum Mongo_Server zu verbinden, 
     bevor dieser up and running ist.
 
-    Dem MySQL Server ist ein Volume für SQL-Scripts gemounted. Um diese ausführen zu können, 
-        > docker exec -it MySQL_Server bash   --> öffnene einer Bash-Shell im Container
-        > mysql -u root -p < scriptname.sql   --> führt das Script aus
-
+    Dem MySQL Gui (MySQL-Workbench) ist ein Volume für SQL-Scripts gemounted (/usr/src/mysql).
+    Das darin enthaltene Script kann aus der Workbench mit Open SQL-Script geöfnet werden.
+    
     PythonJupyter: Der Mongo Server kann nicht über den hostname angesprochen werden.  
     Mit der IP Adresse funktioniert es aber (keine Ahnung wieso). 
     Die IP Adresse ist zu finden mit:
