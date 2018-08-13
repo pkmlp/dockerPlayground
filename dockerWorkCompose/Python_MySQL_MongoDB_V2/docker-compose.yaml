@@ -17,21 +17,21 @@ services:
                     - MySQL_Server
 
     MySQL_Gui:
-        image: phpmyadmin/phpmyadmin
-        container_name: MySQL_Gui
+        build:
+            context: ./MySQL_Gui/
+            dockerfile: Dockerfile
+        image: mysql_gui
         hostname: MySQL_Gui
         domainname: MySQL_Gui
         environment:
-            - PMA_HOST=MySQL_Server
-        ports:
-            - 8080:80
-        networks:
-            db_netz:
-                ipv4_address: 192.168.0.50
-                aliases: 
-                    - MySQL_Gui
+            - DISPLAY=unix:0
+        volumes: 
+            - /home/pkmlp/gitRepos/dockerPlayground/dockerWorkCompose/DB_DEV_ENV/DB_Gui/mySqlShare:/usr/src/mysql
+            - /tmp/.X11-unix:/tmp/.X11-unix
+        networks: 
+            - db_netz
         depends_on: 
-            - MySQL_Server
+            - DB_Server
 
     Mongo_Server:
         build:

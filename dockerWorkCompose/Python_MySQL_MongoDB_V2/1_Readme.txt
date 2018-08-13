@@ -1,4 +1,6 @@
 
+Not yet finished !!!!!!!!
+
 In diesem Beispiel erstellen wir eine Datenbank-Entwicklungsumgebung (MySQL mit MySQL-Workbench, MongoDB mit , PythonJupyter).
 
 
@@ -12,7 +14,7 @@ Vor dem Starten der Umgebung sicherstellen, dass nicht bereits ein DB-Server lä
  --->  anders formuliert: sicherstellen, dass die von den Copntainern benötigten Ports 
        nicht schon belegt/benutzt sind.
 
-    > sudo service mongod stop 
+    > sudo service mongodb stop 
     > sudo service mysql stop
 
 
