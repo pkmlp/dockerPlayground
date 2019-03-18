@@ -20,7 +20,6 @@ Schritt 1: Image für der DB-Server bauen
 Zuerst erstellen wir ein Dockerfile, mit dem wir das Image für den DB-Server erzeugen können. Dazu verwenden wir als Basis das MySQL-Image von Docker und setzen lediglich noch das root Passwort für den DB-Server.
 
 	FROM mysql:latest 
-	MAINTAINER Peter Kessler <pkmlp@pkmlp.ch> 
 	ENV MYSQL_ROOT_PASSWORD=pkmlp
 
 
@@ -93,9 +92,8 @@ Wichtige Hinweise:
 Somit haben wir eine Datenbankumgebung aufgebaut, die komplett Containerisiert ist. Alle Applikationen sind in Containern. Die Daten sind Persistent auf dem Docker Host gespeichert. 
 
 
-Wenn man sehen möchte wo die denn im DOcker Host abgelegt sind:
+Wenn man sehen möchte wo die denn im Docker Host abgelegt sind:
 
     > docker volume inspect db_daten
 
 
- 
