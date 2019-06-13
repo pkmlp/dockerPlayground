@@ -1,0 +1,34 @@
+version: "3.7"
+services:
+  graphileon:
+    image: graphileon:latest
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    volumes:
+      - ./graphileon/log:/log
+      - ./graphileon/persistent:/persistent
+      - ./graphileon/config:/config
+      - ssl:/ssl
+  neo4j-graphileon:
+    image: neo4j:latest
+    environment:
+      - NEO4J_AUTH=neo4j/graphileon
+    volumes:
+      - ./graphileon/neo4j/data:/data
+      - ./graphileon/neo4j/logs:/logs
+      - ./graphileon/neo4j/conf:/conf
+  neo4j-playground:
+    image: neo4j:latest
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      - NEO4J_AUTH=neo4j/playground
+    volumes:
+      - ./playground/data:/data
+      - ./playground/logs:/logs
+      - ./playground/conf:/conf
+
+volumes:
+  ssl:
